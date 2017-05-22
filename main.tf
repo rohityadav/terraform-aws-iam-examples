@@ -2,6 +2,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
+
 resource "aws_iam_role" "ec2-admin-role" {
   name = "ec2-admin-role"
 
@@ -51,3 +52,22 @@ resource "aws_iam_role_policy_attachment" "ec2-role-admin-access-policy-attachme
   role = "${aws_iam_role.ec2-admin-role.id}"
 }
 
+
+resource "aws_iam_group" "admin-group" {
+  name = "admin-group"
+}
+
+resource "aws_iam_user" "user_rohit" {
+  name = "rohit"
+}
+
+resource "aws_iam_group_membership" "admin-group-memebership" {
+  group = "${aws_iam_group.admin-group.id}"
+  name = "admin-group-memebership"
+  users = ["${aws_iam_user.user_rohit.id}"]
+}
+
+resource "aws_iam_group_policy_attachment" "admin-group-policy-attachemnt" {
+  group = "${aws_iam_group.admin-group.id}"
+  policy_arn = "${aws_iam_policy.admin-accss-policy.arn}"
+}
